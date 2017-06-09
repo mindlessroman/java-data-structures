@@ -245,7 +245,7 @@ public class GDList<E> implements Cloneable {
      * IMPLENTED FOR ASSIGNMENT
      **/
     public void exchange (GNode n1, GNode n2) {
-        System.out.println("swapping " + n1 + "and " + n2);
+        System.out.println("swapping " + n1 + " and " + n2);
 
         if (n1 != null && n2 != null && !n1.equals(n2)) {
             System.out.println("neither of the items are null, nor are they the same element");
@@ -318,20 +318,30 @@ public class GDList<E> implements Cloneable {
             cursorAdd = cursorAdd.getNext();
         }
         if (pos >= 0 && pos < size) {
-            //System.out.println(cursorAdd.getData());
             GNode findN = findNode(head, e);
             if (findN == null) {
-                GNode tempBefore = cursorAdd.getPrevious();
-                GNode tempAfter = cursorAdd.getNext();
+                GNode tempBefore;
+                if (cursorAdd.getPrevious() != null) {
+                    tempBefore = cursorAdd.getPrevious();
+                } else {
+                    tempBefore = null;
+                }
+                GNode tempAfter = cursorAdd; //if something already exists, "move it over" one
                 //insert's before needs to be come tempbefore
                 add_node.setPrevious(tempBefore);
                 //insert's after needs to become the cursor
                 add_node.setNext(cursorAdd);
                 //tempbefore's after needs to become insert
-                tempBefore.setNext(add_node);
+                //...if pos is zero then the before is null and doesn't need any pointers
+                if (tempBefore != null) {
+                    tempBefore.setNext(add_node);
+                } else {
+                    //if the previous is null then head needs to be updated
+                    head = add_node;
+                }
                 //tempafter's before needs to become insert
                 cursorAdd.setPrevious(add_node);
-
+                size++;
                 return 0;
             }
         }
@@ -461,12 +471,17 @@ public class GDList<E> implements Cloneable {
         //Adding at posiition
         String addExists = "Queenie";
         String notExists = "Rhubarb";
-        System.out.println("Adding queenie at pos 3 (which already exists) -- nothing should happen");
+        System.out.println("Adding queenie (which already exists) at pos 3  -- nothing should happen");
         names.addPos(addExists, 3);
         names.printList();//nothing should happen
-        System.out.println("Adding rhubarb at pos 2 (which doesn't exist) - Rhubarb will be added as 3rd elem");
+        System.out.println("\nAdding rhubarb (which doesn't exist) at pos 3 - Rhubarb will be added at pos 3 elem");
         names.addPos(notExists, 3);
         names.printList(); // Rhubarb should be 4h elem
+        System.out.println("\nAdding adam at pos 0");
+        names.addPos("Adam", 0); //adding adam  - failed test when graded
+        names.printList();
+        System.out.println("\nAdding candle at ");
+        names.addPos("Candle", names.size-1); //adding candle - testing when pos is last item
 
         //replace at position
         String repExists = "Barbour";
